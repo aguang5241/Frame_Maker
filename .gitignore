@@ -1,3 +1,7 @@
+# ingore all files in the input and output folders
+input/*
+output/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

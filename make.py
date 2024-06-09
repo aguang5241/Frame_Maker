@@ -11,6 +11,7 @@ def main(path):
     img_mode = img.mode
     img_size = os.path.getsize(path) / (1024 * 1024)
     img_width, img_height = img.size
+    img_is_horizontal = img_width > img_height
     img_resolution = img.info['dpi']
     img_make = exif['Make'].split()[0]
     img_model = exif['Model'].rstrip('\x00')
@@ -28,27 +29,46 @@ def main(path):
     border_width, border_height = img_width, img_height // 10
     ratio = 5568 / border_width
     border = Image.new(img_mode, (border_width, border_height), (255, 255, 255))
+
     # Add logo to border
     logo = Image.open(logo_path).convert('RGBA')
     logo_width, logo_height = int(border_height * 0.6), int(border_height * 0.6)
-    logo_position = (int(border_width * 0.68), int(border_height * 0.2))
+    if img_is_horizontal:
+        logo_position = (int(border_width * 0.68), int(border_height * 0.2))
+    else:
+        logo_position = (int(border_width * 0.40), int(border_height * 0.2))
     logo = logo.resize((logo_width, logo_height))
     border.paste(logo, logo_position)
     # Draw vertical line on the right side of the logo
     draw = ImageDraw.Draw(border)
-    line_position = (int((logo_position[0] + logo_width) * 1.02), int(border_height * 0.2))
+    if img_is_horizontal:
+        line_position = (int((logo_position[0] + logo_width) * 1.02), int(border_height * 0.2))
+    else:
+        line_position = (int((logo_position[0] + logo_width) * 1.03), int(border_height * 0.2))
     draw.line([(line_position[0], line_position[1]), (line_position[0], line_position[1] + logo_height)], fill=(200, 200, 200), width=int(10/ratio))
     # Add model information to border
-    img_model_font = ImageFont.truetype('Arial Bold.ttf', int(120/ratio))
-    img_model_position = (int(border_width * 0.05), int(border_height * 0.20))
+    if img_is_horizontal:
+        img_model_font = ImageFont.truetype('Arial Bold.ttf', int(120/ratio))
+        img_model_position = (int(border_width * 0.05), int(border_height * 0.20))
+    else:
+        img_model_font = ImageFont.truetype('Arial Bold.ttf', int(200/ratio))
+        img_model_position = (int(border_width * 0.05), int(border_height * 0.25))
     draw.text(img_model_position, f'{img_model}', (0, 0, 0), font=img_model_font)
     # Add date information to border
-    img_date_font = ImageFont.truetype('Arial.ttf', int(80/ratio))
-    img_date_position = (int(border_width * 0.05), int(border_height * 0.60))
+    if img_is_horizontal:
+        img_date_font = ImageFont.truetype('Arial.ttf', int(80/ratio))
+        img_date_position = (int(border_width * 0.05), int(border_height * 0.60))
+    else:
+        img_date_font = ImageFont.truetype('Arial.ttf', int(150/ratio))
+        img_date_position = (int(border_width * 0.05), int(border_height * 0.60))
     draw.text(img_date_position, f'{img_date}', (120, 120, 120), font=img_date_font)
     # Add shot information to border
-    shot_font = ImageFont.truetype('Arial Bold.ttf', int(90/ratio))
-    shot_position = (int((logo_position[0] + logo_width) * 1.04), int(border_height*0.35))
+    if img_is_horizontal:
+        shot_font = ImageFont.truetype('Arial Bold.ttf', int(90/ratio))
+        shot_position = (int((logo_position[0] + logo_width) * 1.04), int(border_height*0.35))
+    else:
+        shot_font = ImageFont.truetype('Arial Bold.ttf', int(180/ratio))
+        shot_position = (int((logo_position[0] + logo_width) * 1.06), int(border_height*0.40))
     shot_text = f'{img_focal_length}mm  f/{img_aperture}  {img_shutter}  ISO{img_iso}'
     draw.text(shot_position, shot_text, (0, 0, 0), font=shot_font)
 
