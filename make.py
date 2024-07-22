@@ -48,7 +48,7 @@ def main(path):
     draw.line([(line_position[0], line_position[1]), (line_position[0], line_position[1] + logo_height)], fill=(200, 200, 200), width=int(10/ratio))
     # Add model information to border
     if img_is_horizontal:
-        img_model_font = ImageFont.truetype('Arial Bold.ttf', int(120/ratio))
+        img_model_font = ImageFont.truetype('Arial Bold.ttf', int(100/ratio))
         img_model_position = (int(border_width * 0.05), int(border_height * 0.20))
     else:
         img_model_font = ImageFont.truetype('Arial Bold.ttf', int(200/ratio))
