@@ -1,5 +1,5 @@
 # Frame_Maker
-Create a photo frame and display the information extracted from the photo's metadata
+A python3 code to create a photo frame and display the information extracted from the photo's metadata
 
 ⭐️ Star the repository if you find it useful :) ⭐️
 
